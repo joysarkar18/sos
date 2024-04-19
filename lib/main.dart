@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sos/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  permissionSms();
   runApp(const MyApp());
+}
+
+void permissionSms() async {
+  await [Permission.sms, Permission.location].request();
 }
 
 class MyApp extends StatelessWidget {

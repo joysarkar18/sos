@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SendMessageWidget extends StatefulWidget {
@@ -15,15 +16,17 @@ class _SendMessageWidgetState extends State<SendMessageWidget> {
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   static const platform = MethodChannel('sendSms');
+  Position? _currentPosition;
 
   @override
   void initState() {
-    permissionSms();
     super.initState();
   }
 
-  void permissionSms() async {
-    await [Permission.sms].request();
+  void getLocation() async {
+    print("location access called");
+    _currentPosition = await _determinePosition();
+    _sendMessage();
   }
 
   void _sendMessage() {
@@ -47,13 +50,19 @@ class _SendMessageWidgetState extends State<SendMessageWidget> {
     }
   }
 
+  Future<Position> _determinePosition() async {
+    return await Geolocator.getCurrentPosition();
+  }
+
   Future<Null> sendSms({required String msg, required String number}) async {
     print("SendSMS");
     try {
-      final String result = await platform.invokeMethod(
-          'send', <String, dynamic>{
+      String mapLink = "";
+      final String result =
+          await platform.invokeMethod('send', <String, dynamic>{
         "phone": "+91$number",
-        "msg": msg
+        "msg":
+            "Accident occured to ${msg} at the position ${"\n"}Latitude :  ${_currentPosition!.latitude} Longitude: ${_currentPosition!.longitude} ${"\n"} Location: http://maps.google.com/maps?q=${_currentPosition!.latitude},${_currentPosition!.longitude}",
       }); //Replace a 'X' with 10 digit phone number
       print(result);
     } on PlatformException catch (e) {
@@ -110,14 +119,14 @@ class _SendMessageWidgetState extends State<SendMessageWidget> {
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     prefixIcon: Icon(
-                      Icons.message,
+                      Icons.person,
                       color: Colors.black87,
                     ),
-                    labelText: 'Message',
+                    labelText: 'Name',
                     border: OutlineInputBorder(borderSide: BorderSide())),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a message';
+                    return 'Please enter Your name';
                   }
                   return null;
                 },
@@ -136,7 +145,7 @@ class _SendMessageWidgetState extends State<SendMessageWidget> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: ElevatedButton(
-                  onPressed: _sendMessage,
+                  onPressed: getLocation,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     elevation: 0,
