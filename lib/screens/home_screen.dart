@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos/screens/add_phone_number_screen.dart';
+import 'package:sos/screens/bluetooth_screen.dart';
 import 'package:sos/screens/instruction_screen.dart';
 import 'package:sos/screens/login_screen.dart';
 import 'package:sos/utils/helper_functions.dart';
@@ -180,7 +181,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-            )
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlueToothScreen(),
+                      ));
+                },
+                child: Text("goto blue"))
           ],
         ),
       ),

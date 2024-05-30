@@ -15,7 +15,7 @@ class InstructionScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 70,
             ),
             const Text(
