@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:sos/controllers/blue_controller.dart';
 import 'package:sos/screens/add_phone_number_screen.dart';
-import 'package:sos/screens/bluetooth_screen.dart';
+import 'package:sos/screens/blue_screen.dart';
 import 'package:sos/screens/instruction_screen.dart';
 import 'package:sos/screens/login_screen.dart';
+import 'package:sos/utils/blue.dart';
 import 'package:sos/utils/helper_functions.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,8 +17,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  BluetoothController bt = Get.put(BluetoothController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    // turnOnBlue();
+    requestBluetoothPermissions();
+    super.initState();
+  }
+
+  Future<void> requestBluetoothPermissions() async {
+    var status = await Permission.bluetoothConnect.status;
+    if (!status.isGranted) {
+      await Permission.bluetoothConnect.request();
+    }
+
+    status = await Permission.bluetoothScan.status;
+    if (!status.isGranted) {
+      await Permission.bluetoothScan.request();
+    }
+
+    status = await Permission.location.status;
+    if (!status.isGranted) {
+      await Permission.location.request();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // scanDevice();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -155,7 +186,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      sendMessageToAll();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SelectBondedDevicePage(
+                              checkAvailability: false,
+                            ),
+                          ));
                     },
                     child: Container(
                       height: 142,
@@ -182,15 +219,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlueToothScreen(),
-                      ));
-                },
-                child: Text("goto blue"))
+            // TextButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => BluetoothConnectionPage(),
+            //           ));
+            //     },
+            //     child: Text("goto blue"))
           ],
         ),
       ),
