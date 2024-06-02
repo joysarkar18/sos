@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:sos/database/database.dart';
 import 'package:sos/models/person_model.dart';
 
@@ -50,12 +51,12 @@ class AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
-          "Add Phone Numbers",
+          "Add Emergency Numbers",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset("assets/Rectangle 42.png"),
+          child: Image.asset("assets/sos.png"),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -64,100 +65,95 @@ class AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
           TextEditingController nameController = TextEditingController();
           TextEditingController phoneNumberController = TextEditingController();
           final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-          showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              return Container(
-                height: 400,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 250, 247, 247)),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextFormField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Name',
-                            labelStyle: const TextStyle(color: Colors.blue),
-                            border: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Colors.blue, width: 2.0),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextFormField(
-                          controller: phoneNumberController,
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a phone number';
-                            }
-                            if (value.length != 10) {
-                              return 'Phone number must be 10 digits';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'Phone Number',
-                            labelStyle: const TextStyle(color: Colors.blue),
-                            border: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Colors.blue, width: 2.0),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              addPersion(
-                                  person: Person(
-                                      name: nameController.text,
-                                      phoneNumber: phoneNumberController.text));
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Container(
-                            height: 44,
-                            width: 200,
-                            margin: const EdgeInsets.only(top: 30),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: const Center(
-                              child: Text(
-                                "Add Number",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
+          Get.bottomSheet(Container(
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration:
+                const BoxDecoration(color: Color.fromARGB(255, 250, 247, 247)),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
                     ),
-                  ),
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        labelStyle: const TextStyle(color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 2.0),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextFormField(
+                      controller: phoneNumberController,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a phone number';
+                        }
+                        if (value.length != 10) {
+                          return 'Phone number must be 10 digits';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number',
+                        labelStyle: const TextStyle(color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 2.0),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          addPersion(
+                              person: Person(
+                                  name: nameController.text,
+                                  phoneNumber: phoneNumberController.text));
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        height: 44,
+                        width: 200,
+                        margin: const EdgeInsets.only(top: 30),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: const Center(
+                          child: Text(
+                            "Add Number",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              );
-            },
-          );
+              ),
+            ),
+          ));
         },
         child: const Text(
           "Add",

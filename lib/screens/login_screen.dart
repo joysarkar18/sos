@@ -63,13 +63,13 @@ class _RegisterFormState extends State<RegisterForm> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text(
-          "Register Details",
+        title: const Text(
+          "Update Details",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset("assets/Rectangle 42.png"),
+          child: Image.asset("assets/sos.png"),
         ),
       ),
       body: SingleChildScrollView(

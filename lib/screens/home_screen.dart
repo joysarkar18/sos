@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get/get.dart';
+import 'package:glossy/glossy.dart';
+import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sos/controllers/blue_controller.dart';
 import 'package:sos/screens/add_phone_number_screen.dart';
@@ -18,12 +21,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   BluetoothController bt = Get.put(BluetoothController());
+
   @override
   void initState() {
-    // TODO: implement initState
-    // turnOnBlue();
-    requestBluetoothPermissions();
     super.initState();
+    requestBluetoothPermissions();
   }
 
   Future<void> requestBluetoothPermissions() async {
@@ -45,190 +47,212 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // scanDevice();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
-          "SOS",
+          "SAVE OUR SOULS",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset("assets/Rectangle 42.png"),
+          child: Image.asset("assets/sos.png"),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Obx(() => Switch(
+                value: bt.isConnected.value,
+                onChanged: (val) {
+                  if (val) {
+                    bt.enableBluetooth();
+                  } else {
+                    bt.disableBluetooth();
+                  }
+                })),
+          )
+        ],
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 241, 236, 236),
-          Color.fromARGB(255, 124, 123, 123)
+          Color.fromARGB(255, 5, 1, 29),
+          Color.fromARGB(255, 2, 7, 29)
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InstructionScreen(
-                              isFromHome: true,
-                            ),
-                          ));
-                    },
-                    child: Container(
-                      height: 142,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/189664-removebg-preview 1.png"),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Instructions",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddPhoneNumberScreen(),
-                          ));
-                    },
-                    child: Container(
-                      height: 142,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/Ellipse 2.png"),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Emergency Numbers",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterForm(
-                              isEdit: true,
-                            ),
-                          ));
-                    },
-                    child: Container(
-                      height: 142,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/Ellipse 3.png"),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "View Saved Details",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InstructionScreen(
+                                isFromHome: true,
+                              ),
+                            ));
+                      },
+                      child: GlossyContainer(
+                        height: 142,
+                        width: 150,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/mandatory.png",
+                                height: 70,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Instructions",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SelectBondedDevicePage(
-                              checkAvailability: false,
-                            ),
-                          ));
-                    },
-                    child: Container(
-                      height: 142,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16),
-                          image: DecorationImage(
-                              image: AssetImage("assets/sos_send.jpeg"))),
-                      // child: Center(
-                      //   child: Column(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Image.asset(
-                      //         "assets/sos_send.jpeg",
-                      //         height: 140,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterForm(
+                                isEdit: true,
+                              ),
+                            ));
+                      },
+                      child: GlossyContainer(
+                        height: 142,
+                        width: 150,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/save-instagram.png",
+                                height: 70,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Saved Details",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-            // TextButton(
-            //     onPressed: () {
-            //       Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //             builder: (context) => BluetoothConnectionPage(),
-            //           ));
-            //     },
-            //     child: Text("goto blue"))
-          ],
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddPhoneNumberScreen(),
+                            ));
+                      },
+                      child: GlossyContainer(
+                        height: 142,
+                        width: 150,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/emergency-call.png",
+                                height: 70,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text(
+                                "Emergency Numbers",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const SelectBondedDevicePage(
+                                checkAvailability: false,
+                              ),
+                            ));
+                      },
+                      child: GlossyContainer(
+                        height: 142,
+                        width: 150,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/bluetooth.png",
+                                height: 70,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Connect",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+
+              Obx(() => Column(
+                    children: [
+                      if (bt.isListening.value)
+                        Lottie.asset('assets/Animation - 1717314338592.json',
+                            height: 200),
+                    ],
+                  ))
+
+              // Text("Connected")
+            ],
+          ),
         ),
       ),
     );
